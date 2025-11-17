@@ -2,6 +2,7 @@
 node_modules/
 newman/
 allure-results/
+allure-report/
 
 # Newman reports (generated artifacts)
 newman/reports/

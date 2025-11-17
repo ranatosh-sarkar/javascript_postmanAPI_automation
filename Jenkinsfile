@@ -9,8 +9,7 @@ pipeline {
   }
 
   environment {
-    // Single source of truth for where Newman writes Allure results
-    NEWMAN_ALLURE_RESULTS = 'newman/reports/allure-results'
+    NEWMAN_ALLURE_RESULTS = 'allure-results'
   }
 
   stages {
@@ -30,7 +29,6 @@ pipeline {
 
     stage('Clean old reports') {
       steps {
-        // Clean any previous run artefacts in the WORKSPACE
         bat '''
           if exist newman (
             echo Deleting old Newman reports...
@@ -40,6 +38,10 @@ pipeline {
             echo Deleting old generated Allure HTML...
             rmdir /s /q allure-report
           )
+          if exist allure-results (
+            echo Deleting old Allure raw results...
+            rmdir /s /q allure-results
+          )
         '''
       }
     }
@@ -47,22 +49,19 @@ pipeline {
     stage('Run Newman (QA)') {
       steps {
         script {
-          // Run Newman; if it fails, mark build UNSTABLE but still publish reports
           int code = bat(
             returnStatus: true,
             label: 'Newman QA run',
             script: 'npm run test:qa'
           )
-
           if (code != 0) {
-            echo "Newman exited with code ${code} – tests failed, marking build UNSTABLE so reports are still generated."
+            echo "Newman exited with code ${code} – marking build UNSTABLE so reports are still generated."
             currentBuild.result = 'UNSTABLE'
           }
         }
       }
     }
 
-    // Optional debug – shows exactly what Allure will read
     stage('Debug: list Allure result files') {
       steps {
         bat """
@@ -79,21 +78,17 @@ pipeline {
 
   post {
     always {
-      // JUnit trend from Newman’s JUnit reporter
       junit allowEmptyResults: true,
             testResults: 'newman/reports/junit/*.xml'
 
-      // Allure plugin: generate HTML from Newman’s raw Allure results
       allure includeProperties: false,
              jdk: '',
              results: [[path: "${env.NEWMAN_ALLURE_RESULTS}"]]
 
-      // Archive all Newman artefacts (HTML, JSON, JUnit, Allure raw)
       archiveArtifacts artifacts: 'newman/reports/**',
                        fingerprint: true,
                        allowEmptyArchive: true
 
-      // Publish the htmlextra HTML report as a Jenkins HTML report
       publishHTML(target: [
         reportDir: 'newman/reports/html',
         reportFiles: 'qa-run.html',
@@ -102,18 +97,6 @@ pipeline {
         alwaysLinkToLastBuild: true,
         allowMissing: true
       ])
-    }
-
-    success {
-      echo '✅ Newman tests completed successfully.'
-    }
-
-    unstable {
-      echo '⚠️ Newman reported test failures – check Allure / HTML / JUnit reports for details.'
-    }
-
-    failure {
-      echo '❌ Pipeline failed before or during Newman execution.'
     }
   }
 }
