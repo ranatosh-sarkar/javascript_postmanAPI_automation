@@ -7,22 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Registration",
-			"item": []
-		},
-		{
-			"name": "Application",
-			"item": []
-		},
-		{
-			"name": "KYC",
-			"item": []
-		},
-		{
-			"name": "Transactions",
-			"item": []
-		},
-		{
 			"name": "E2E Flow",
 			"item": [
 				{

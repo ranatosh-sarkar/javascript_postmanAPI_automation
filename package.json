@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "test:qa": "newman run collections/Postman_API_Automation.postman_collection.json --folder \"E2E Flow\" -e environments/QA.postman_environment.json -r cli,htmlextra,json,junit,allure --reporter-htmlextra-export newman/reports/html/qa-run.html --reporter-json-export newman/reports/json/qa-run.json --reporter-junit-export newman/reports/junit/qa-results.xml --reporter-allure-export newman/reports/allure-results"
+    "test:qa": "newman run \"e2e flows/Postman API Automation.postman_collection.json\" --folder \"E2E Flow\" -e environments/QA.postman_environment.json -r cli,htmlextra,json,junit,allure --reporter-htmlextra-export newman/reports/html/qa-run.html --reporter-json-export newman/reports/json/qa-run.json --reporter-junit-export newman/reports/junit/qa-results.xml --reporter-allure-export newman/reports/allure-results",
+
+    "test:all": "newman run \"collections/API Automation.postman_collection.json\" -e environments/QA.postman_environment.json -r cli,htmlextra"
   },
   "keywords": [],
   "author": "",
