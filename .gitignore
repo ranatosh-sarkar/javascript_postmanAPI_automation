@@ -1,0 +1,30 @@
+# Node dependencies
+node_modules/
+newman/
+allure-results/
+
+# Newman reports (generated artifacts)
+newman/reports/
+newman/*.html
+newman/*.json
+newman/*.xml
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor folders
+.vscode/
+.idea/
+*.iml
+
+# Optional: if you ever keep local-only env overrides
+.env
+.env.*

@@ -1,0 +1,914 @@
+{
+	"info": {
+		"_postman_id": "efa07f3d-a302-4507-91c3-c72ad60b763e",
+		"name": "Postman API Automation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42851594"
+	},
+	"item": [
+		{
+			"name": "Registration",
+			"item": []
+		},
+		{
+			"name": "Application",
+			"item": []
+		},
+		{
+			"name": "KYC",
+			"item": []
+		},
+		{
+			"name": "Transactions",
+			"item": []
+		},
+		{
+			"name": "E2E Flow",
+			"item": [
+				{
+					"name": "Post_addRegister",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - addRegister\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Body echoes registration data\", () => {\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact: Number(pm.collectionVariables.get(\"contact\")),\r",
+									"    firstName: pm.collectionVariables.get(\"firstName\"),\r",
+									"    lastName: pm.collectionVariables.get(\"lastName\"),\r",
+									"    email: pm.collectionVariables.get(\"email\")\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contact\": {{contact}},\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}\r\n\r\n// {\r\n//   \"contact\": 8903625893,\r\n//   \"firstName\": \"CCC\",\r\n//   \"lastName\": \"DDD\",\r\n//   \"email\": \"c.d@example.com\",\r\n//   \"password\": \"cd123\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/addRegister",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addRegister"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_RegisterByContact/9087654321",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - registerByContact\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Newly registered user is returned\", () => {\r",
+									"  const json = pm.response.json();\r",
+									"\r",
+									"  const contact   = Number(pm.collectionVariables.get(\"contact\"));\r",
+									"  const firstName = pm.collectionVariables.get(\"firstName\");\r",
+									"  const lastName  = pm.collectionVariables.get(\"lastName\");\r",
+									"  const email     = pm.collectionVariables.get(\"email\");\r",
+									"\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact,\r",
+									"    firstName,\r",
+									"    lastName,\r",
+									"    email\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/registerByContact?contact={{contact}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"registerByContact"
+							],
+							"query": [
+								{
+									"key": "contact",
+									"value": "{{contact}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_Registers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - registers\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Newly registered user is present\", () => {\r",
+									"  const contact = Number(pm.collectionVariables.get(\"contact\"));\r",
+									"  const email = pm.collectionVariables.get(\"email\");\r",
+									"  const users = pm.response.json();\r",
+									"\r",
+									"  const match = users.find(u => u.contact === contact);\r",
+									"  pm.expect(match, \"user with generated contact exists\").to.be.an(\"object\");\r",
+									"  pm.expect(match.email).to.eql(email);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/registers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"registers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addApplication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - addApplication\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Application created with pending status and no password\", () => {\r",
+									"  const contact = Number(pm.collectionVariables.get(\"contact\"));\r",
+									"  const accounttype = pm.collectionVariables.get(\"accounttype\");\r",
+									"  const country = pm.collectionVariables.get(\"country\");\r",
+									"  const socialid = pm.collectionVariables.get(\"socialid\");\r",
+									"  const pending = pm.collectionVariables.get(\"applicationstatusPending\");\r",
+									"\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact,\r",
+									"    accounttype,\r",
+									"    country,\r",
+									"    socialid,\r",
+									"    applicationstatus: pending\r",
+									"  });\r",
+									"\r",
+									"  pm.expect(json.password, \"password must be null/absent\").to.be.oneOf([null, undefined]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contact\": {{contact}},\r\n  \"password\": \"{{password}}\",\r\n  \"accounttype\": \"{{accounttype}}\",\r\n  \"country\": \"{{country}}\",\r\n  \"socialid\": \"{{socialid}}\"\r\n}\r\n\r\n\r\n// {\r\n//   \"contact\": 8903625893,\r\n//   \"password\": \"cd123\",\r\n//   \"accounttype\": \"Savings\",\r\n//   \"country\": \"IRE\",\r\n//   \"socialid\": \"8903625893cdIRE\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/addApplication",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addApplication"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "applicationByContact/6087654321",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - applicationByContact\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Application retrieved with pending status\", () => {\r",
+									"  const contact = Number(pm.collectionVariables.get(\"contact\"));\r",
+									"  const country = pm.collectionVariables.get(\"country\");\r",
+									"  const socialid = pm.collectionVariables.get(\"socialid\");\r",
+									"  const pending = pm.collectionVariables.get(\"applicationstatusPending\");\r",
+									"\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact,\r",
+									"    country,\r",
+									"    socialid,\r",
+									"    applicationstatus: pending\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/applicationByContact/{{contact}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"applicationByContact",
+								"{{contact}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - applications\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Newly created application is present\", () => {\r",
+									"  const contact = Number(pm.collectionVariables.get(\"contact\"));\r",
+									"  const socialid = pm.collectionVariables.get(\"socialid\");\r",
+									"  const apps = pm.response.json();\r",
+									"\r",
+									"  const found = apps.find(a => a.contact === contact);\r",
+									"  pm.expect(found, \"app with generated contact exists\").to.be.an(\"object\");\r",
+									"  pm.expect(found.socialid).to.eql(socialid);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/applications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kycDataCapture",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - kycDataCapture\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"KYC data capture echoes main fields\", () => {\r",
+									"  const json = pm.response.json();\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact: Number(pm.collectionVariables.get(\"contact\")),\r",
+									"    password: pm.collectionVariables.get(\"password\"),\r",
+									"    socialid: pm.collectionVariables.get(\"socialid\"),\r",
+									"    annualincome: pm.collectionVariables.get(\"annualincome\")\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contact\": {{contact}},\r\n  \"password\": \"{{password}}\",\r\n  \"socialid\": \"{{socialid}}\",\r\n  \"annualincome\": \"{{annualincome}}\",\r\n  \"taxid\": \"{{taxid}}\",\r\n  \"drivinglicence\": \"{{drivinglicence}}\",\r\n  \"passportnumber\": \"{{passportnumber}}\",\r\n  \"occupation\": \"{{occupation}}\",\r\n  \"ongoingloans\": \"{{ongoingloans}}\"\r\n}\r\n\r\n\r\n// {\r\n//   \"contact\":        8903625893,\r\n//   \"password\":       \"cd123\",\r\n//   \"socialid\":       \"8903625893cdIRE\",\r\n//   \"annualincome\":   \"58000\",\r\n//   \"taxid\":          \"TAX8903625893cdIRE\",\r\n//   \"drivinglicence\": \"DL-8903625893cdIRE\",\r\n//   \"passportnumber\": \"P8903625893cdIRE\",\r\n//   \"occupation\":     \"Engineer\",\r\n//   \"ongoingloans\":   \"0\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/kycDataCapture",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"kycDataCapture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kycVerification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - kycVerification\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"KYC verification activates application\", () => {\r",
+									"  const json = pm.response.json();\r",
+									"  const contact = Number(pm.collectionVariables.get(\"contact\"));\r",
+									"  const firstName = pm.collectionVariables.get(\"firstName\");\r",
+									"  const lastName = pm.collectionVariables.get(\"lastName\");\r",
+									"  const email = pm.collectionVariables.get(\"email\");\r",
+									"  const socialid = pm.collectionVariables.get(\"socialid\");\r",
+									"  const active = pm.collectionVariables.get(\"applicationstatusActive\");\r",
+									"\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact,\r",
+									"    firstName,\r",
+									"    lastName,\r",
+									"    email,\r",
+									"    socialid,\r",
+									"    applicationstatus: active,\r",
+									"    balance: \"2000.0\",\r",
+									"    kycstatus: \"ACTIVE\"\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contact\": {{contact}},\r\n  \"password\": \"{{password}}\",\r\n  \"socialid\": \"{{socialid}}\",\r\n  \"annualincome\": \"{{annualincome}}\",\r\n  \"taxid\": \"{{taxid}}\",\r\n  \"drivinglicence\": \"{{drivinglicence}}\",\r\n  \"passportnumber\": \"{{passportnumber}}\",\r\n  \"occupation\": \"{{occupation}}\",\r\n  \"ongoingloans\": \"{{ongoingloans}}\"\r\n}\r\n\r\n// {\r\n//   \"contact\":        8903625893,\r\n//   \"password\":       \"cd123\",\r\n//   \"socialid\":       \"8903625893cdIRE\",\r\n//   \"annualincome\":   \"58000\",\r\n//   \"taxid\":          \"TAX8903625893cdIRE\",\r\n//   \"drivinglicence\": \"DL-8903625893cdIRE\",\r\n//   \"passportnumber\": \"P8903625893cdIRE\",\r\n//   \"occupation\":     \"Engineer\",\r\n//   \"ongoingloans\":   \"0\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/kycVerification",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"kycVerification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deposit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - deposit\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deposit transaction correct\", () => {\r",
+									"  const json = pm.response.json();\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact: Number(pm.collectionVariables.get(\"contact\")),\r",
+									"    txntype: \"DEPOSIT\",\r",
+									"    amount: 1000.0\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contact\": {{contact}},\r\n  \"password\": \"{{password}}\",\r\n  \"amount\": 1000.0\r\n}\r\n\r\n\r\n// { \r\n//     \"contact\": 8903625893, \"password\": \"cd123\", \"amount\": 1000.00 \r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/deposit",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "withdraw",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - withdraw\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Withdraw transaction correct\", () => {\r",
+									"  const json = pm.response.json();\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact: Number(pm.collectionVariables.get(\"contact\")),\r",
+									"    txntype: \"WITHDRAW\",\r",
+									"    amount: 2000.0\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contact\": {{contact}},\r\n  \"password\": \"{{password}}\",\r\n  \"amount\": 2000.0\r\n}\r\n\r\n\r\n// { \r\n//     \"contact\": 8903625893, \"password\": \"cd123\", \"amount\": 2000.00 \r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/withdraw",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transferFund/5087654321",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - transferFund\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer IN transaction for recipient\", () => {\r",
+									"  const json = pm.response.json();\r",
+									"  const recipientContact = Number(pm.collectionVariables.get(\"recipientContact\"));\r",
+									"\r",
+									"  pm.expect(json).to.include({\r",
+									"    contact: recipientContact,\r",
+									"    txntype: \"TRANSFER_IN\",\r",
+									"    amount: 500.0\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contact\": {{contact}},\r\n  \"password\": \"{{password}}\",\r\n  \"amount\": 500.0\r\n}\r\n\r\n\r\n// { \r\n//     \"contact\": 8903625893, // payer \r\n//     \"password\": \"cd123\", \r\n//     \"amount\": 500.00 \r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/transferFund/{{recipientContact}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"transferFund",
+								"{{recipientContact}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "displayStatement/6087654321?password=collins123",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 - displayStatement\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response is an array\", () => {\r",
+									"  pm.expect(Array.isArray(body)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each transaction has required fields and correct types\", () => {\r",
+									"  body.forEach(tx => {\r",
+									"    pm.expect(tx).to.have.property(\"id\");\r",
+									"    pm.expect(tx).to.have.property(\"contact\");\r",
+									"    pm.expect(tx).to.have.property(\"txntype\");\r",
+									"    pm.expect(tx).to.have.property(\"amount\");\r",
+									"    pm.expect(tx).to.have.property(\"balanceAfter\");\r",
+									"    pm.expect(tx).to.have.property(\"txnTime\");\r",
+									"    pm.expect(tx).to.have.property(\"password\");\r",
+									"\r",
+									"    pm.expect(typeof tx.id).to.equal(\"number\");\r",
+									"    pm.expect(typeof tx.contact).to.equal(\"number\");\r",
+									"    pm.expect(typeof tx.txntype).to.equal(\"string\");\r",
+									"    pm.expect(typeof tx.amount).to.equal(\"number\");\r",
+									"    pm.expect(typeof tx.balanceAfter).to.equal(\"number\");\r",
+									"    pm.expect(typeof tx.txnTime).to.equal(\"string\");\r",
+									"    // tx.password can be any type (as in Cypress schema)\r",
+									"  });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/displayStatement/{{contact}}?password={{password}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"displayStatement",
+								"{{contact}}"
+							],
+							"query": [
+								{
+									"key": "password",
+									"value": "{{password}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"// Only generate once per collection run\r",
+					"if (!pm.collectionVariables.get(\"contact\")) {\r",
+					"\r",
+					"  function randomInt(min, max) {\r",
+					"    return Math.floor(min + Math.random() * (max - min + 1));\r",
+					"  }\r",
+					"\r",
+					"  function randomString(length) {\r",
+					"    const chars = 'abcdefghijklmnopqrstuvwxyz';\r",
+					"    let out = '';\r",
+					"    for (let i = 0; i < length; i++) {\r",
+					"      out += chars.charAt(Math.floor(Math.random() * chars.length));\r",
+					"    }\r",
+					"    return out;\r",
+					"  }\r",
+					"\r",
+					"  const contact = randomInt(1000000000, 9999999999); // 10-digit\r",
+					"  const firstName = randomString(3);\r",
+					"  const lastName = randomString(3);\r",
+					"  const email = `${firstName}.${lastName}@example.com`;\r",
+					"  const password = randomString(6);\r",
+					"\r",
+					"  const country = randomString(3).toUpperCase();\r",
+					"  const threeDigit = randomInt(100, 999);\r",
+					"  const socialid = `${threeDigit}${lastName}${country}`;\r",
+					"\r",
+					"  const accounttype = \"SAVINGS\";\r",
+					"  const annualincome = \"58000\";\r",
+					"  const occupation = \"Engineer\";\r",
+					"  const ongoingloans = \"0\";\r",
+					"  const taxid = `TAX${socialid}`;\r",
+					"  const drivinglicence = `DL-${socialid}`;\r",
+					"  const passportnumber = `P${socialid}`;\r",
+					"\r",
+					"  const applicationstatusPending = \"PENDING\";\r",
+					"  const applicationstatusActive = \"ACTIVE\";\r",
+					"\r",
+					"  // Save to collection variables\r",
+					"  pm.collectionVariables.set(\"contact\", contact);\r",
+					"  pm.collectionVariables.set(\"firstName\", firstName);\r",
+					"  pm.collectionVariables.set(\"lastName\", lastName);\r",
+					"  pm.collectionVariables.set(\"email\", email);\r",
+					"  pm.collectionVariables.set(\"password\", password);\r",
+					"\r",
+					"  pm.collectionVariables.set(\"country\", country);\r",
+					"  pm.collectionVariables.set(\"socialid\", socialid);\r",
+					"  pm.collectionVariables.set(\"accounttype\", accounttype);\r",
+					"  pm.collectionVariables.set(\"annualincome\", annualincome);\r",
+					"  pm.collectionVariables.set(\"occupation\", occupation);\r",
+					"  pm.collectionVariables.set(\"ongoingloans\", ongoingloans);\r",
+					"  pm.collectionVariables.set(\"taxid\", taxid);\r",
+					"  pm.collectionVariables.set(\"drivinglicence\", drivinglicence);\r",
+					"  pm.collectionVariables.set(\"passportnumber\", passportnumber);\r",
+					"\r",
+					"  pm.collectionVariables.set(\"applicationstatusPending\", applicationstatusPending);\r",
+					"  pm.collectionVariables.set(\"applicationstatusActive\", applicationstatusActive);\r",
+					"\r",
+					"  // Hard-coded known recipient used in Cypress test\r",
+					"  pm.collectionVariables.set(\"recipientContact\", 6087654321);\r",
+					"}\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "contact",
+			"value": ""
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "country",
+			"value": ""
+		},
+		{
+			"key": "socialid",
+			"value": ""
+		},
+		{
+			"key": "accounttype",
+			"value": ""
+		},
+		{
+			"key": "annualincome",
+			"value": ""
+		},
+		{
+			"key": "occupation",
+			"value": ""
+		},
+		{
+			"key": "ongoingloans",
+			"value": ""
+		},
+		{
+			"key": "taxid",
+			"value": ""
+		},
+		{
+			"key": "drivinglicence",
+			"value": ""
+		},
+		{
+			"key": "passportnumber",
+			"value": ""
+		},
+		{
+			"key": "applicationstatusPending",
+			"value": ""
+		},
+		{
+			"key": "applicationstatusActive",
+			"value": ""
+		},
+		{
+			"key": "recipientContact",
+			"value": ""
+		}
+	]
+}
